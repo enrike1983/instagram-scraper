@@ -3,10 +3,10 @@ require __DIR__ . '/vendor/autoload.php';
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
-use Smalot\Cups\Builder\Builder;
-use Smalot\Cups\Manager\PrinterManager;
-use Smalot\Cups\Transport\Client;
-use Smalot\Cups\Transport\ResponseParser;
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 //dotenv
 $dotenv = new Dotenv\Dotenv(__DIR__);
