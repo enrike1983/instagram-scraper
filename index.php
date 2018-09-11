@@ -63,6 +63,7 @@ try {
         $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
 
         if(!in_array($media->getId(), $cached_ids)) {
+            die(var_dump($media));
             //cache
             $data = [
                 'instagram_id' => $media->getId(),
