@@ -63,16 +63,15 @@ try {
         $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
 
         if(!in_array($media->getId(), $cached_ids)) {
-            die(var_dump($media));
             //cache
             $data = [
                 'instagram_id' => $media->getId(),
                 'url' => $media->getLink(),
                 'created_at' => $media->getCreatedTime(),
-                'image' => $base64
+                //'image' => $base64
             ];
 
-            $sql = "INSERT INTO feeds(instagram_id, url, created_at, image) VALUES(:instagram_id, :url, :created_at, :image)";
+            $sql = "INSERT INTO feeds(instagram_id, url, created_at) VALUES(:instagram_id, :url, :created_at)";
             $dbh->prepare($sql)->execute($data);
         }
     }
