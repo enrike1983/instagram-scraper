@@ -8,9 +8,12 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-//dotenv
-$dotenv = new Dotenv\Dotenv(__DIR__);
-$dotenv->load();
+if(file_exists(__DIR__.'/.env')) {
+    //dotenv
+    $dotenv = new Dotenv\Dotenv(__DIR__);
+    $dotenv->load();
+}
+
 //
 ////logger
 $log = new Logger('name');
