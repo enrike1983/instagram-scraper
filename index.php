@@ -73,6 +73,8 @@ try {
 
             $sql = "INSERT INTO feeds(instagram_id, url, created_at) VALUES(:instagram_id, :url, :created_at)";
             $dbh->prepare($sql)->execute($data);
+
+            echo 'import complete!';
         }
     }
 } catch (\Exception $e) {
