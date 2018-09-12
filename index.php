@@ -14,7 +14,6 @@ if(file_exists(__DIR__.'/.env')) {
     $dotenv->load();
 }
 
-//
 ////logger
 $log = new Logger('name');
 $log->pushHandler(new StreamHandler(__DIR__ .'/logs/calls_results.log', Logger::INFO));
@@ -27,22 +26,21 @@ $dsn = getenv('DSN');
 $dbh = new PDO($dsn, $username, $password);
 
 //instagram
-//        echo "Id: {$media->getId()}\n";
-//        echo "Shotrcode: {$media->getShortCode()}\n";
-//        echo "Created at: {$media->getCreatedTime()}\n";
-//        echo "Caption: {$media->getCaption()}\n";
-//        echo "Number of comments: {$media->getCommentsCount()}";
-//        echo "Number of likes: {$media->getLikesCount()}";
-//        echo "Get link: {$media->getLink()}";
-//        echo "High resolution image: {$media->getImageHighResolutionUrl()}";
-//        echo "Media type (video or image): {$media->getType()}";
-//        $account = $media->getOwner();
-//        echo "Account info:\n";
-//        echo "Id: {$account->getId()}\n";
-//        echo "Username: {$account->getUsername()}\n";
-//        echo "Full name: {$account->getFullName()}\n";
-//        echo "Profile pic url: {$account->getProfilePicUrl()}\n";
-
+//echo "Id: {$media->getId()}\n";
+//echo "Shotrcode: {$media->getShortCode()}\n";
+//echo "Created at: {$media->getCreatedTime()}\n";
+//echo "Caption: {$media->getCaption()}\n";
+//echo "Number of comments: {$media->getCommentsCount()}";
+//echo "Number of likes: {$media->getLikesCount()}";
+//echo "Get link: {$media->getLink()}";
+//echo "High resolution image: {$media->getImageHighResolutionUrl()}";
+//echo "Media type (video or image): {$media->getType()}";
+//$account = $media->getOwner();
+//echo "Account info:\n";
+//echo "Id: {$account->getId()}\n";
+//echo "Username: {$account->getUsername()}\n";
+//echo "Full name: {$account->getFullName()}\n";
+//echo "Profile pic url: {$account->getProfilePicUrl()}\n";
 
 try {
     $instagram = new \InstagramScraper\Instagram();
@@ -55,7 +53,6 @@ try {
         $cached_ids[] = $feed['instagram_id'];
     }
 
-    $log->info(date('h:i:sa').' - '.count($medias));
     foreach ($medias as $media) {
 
         $type = pathinfo($media->getImageHighResolutionUrl(), PATHINFO_EXTENSION);
@@ -63,20 +60,20 @@ try {
         $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
 
         if(!in_array($media->getId(), $cached_ids)) {
+            $log->info(date('h:i:sa').' - new feed found: '.$media->getId());
             //cache
             $data = [
                 'instagram_id' => $media->getId(),
                 'url' => $media->getLink(),
                 'created_at' => $media->getCreatedTime(),
-                //'image' => $base64
+                'image' => $base64
             ];
 
-            $sql = "INSERT INTO feeds(instagram_id, url, created_at) VALUES(:instagram_id, :url, :created_at)";
+            $sql = "INSERT INTO feeds(instagram_id, url, created_at, image) VALUES(:instagram_id, :url, :created_at, :image)";
             $dbh->prepare($sql)->execute($data);
-
-            echo 'import complete!';
         }
     }
+    echo 'import complete!';
 } catch (\Exception $e) {
     $log->error($e->getMessage());
 }
