@@ -58,14 +58,17 @@ try {
         if(!in_array($media->getId(), $cached_ids)) {
             $log->info(date('h:i:sa').' - new feed found: '.$media->getId());
             //cache
+            $account = $media->getOwner();
             $data = [
                 'instagram_id' => $media->getId(),
                 'url' => $media->getLink(),
                 'created_at' => $media->getCreatedTime(),
-                'image' => $base64
+                'image' => $base64,
+                'username' => $account->getUsername(),
+                'caption' => $media->getCaption()
             ];
 
-            $sql = "INSERT INTO feeds(instagram_id, url, created_at, image) VALUES(:instagram_id, :url, :created_at, :image)";
+            $sql = "INSERT INTO feeds(instagram_id, url, created_at, image, username, caption) VALUES(:instagram_id, :url, :created_at, :image, :username, :caption)";
             $dbh->prepare($sql)->execute($data);
         }
     }
