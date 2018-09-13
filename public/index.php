@@ -22,7 +22,7 @@ $dsn = getenv('DSN');
 $dbh = new PDO($dsn, $username, $password);
 
 try {
-    $stmt = $dbh->query('SELECT * from feeds');
+    $stmt = $dbh->query('SELECT * from feeds ORDER BY created_at DESC');
     $feeds = $stmt->fetchAll();
 
     header('Content-Type: application/json');
