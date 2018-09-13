@@ -4,10 +4,6 @@ require __DIR__ . '/vendor/autoload.php';
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 if(file_exists(__DIR__.'/.env')) {
     //dotenv
     $dotenv = new Dotenv\Dotenv(__DIR__);
