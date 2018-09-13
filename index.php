@@ -40,7 +40,7 @@ $dbh = new PDO($dsn, $username, $password);
 
 try {
     $instagram = new \InstagramScraper\Instagram();
-    $medias = $instagram->getMediasByTag('metalgirl', 100);
+    $medias = $instagram->getMediasByTag('sposiamorelli', 100);
 
     //if already cached, ignore, otherwise process!
     $cached_feeds_ids = $dbh->query('SELECT instagram_id from feeds', PDO::FETCH_ASSOC);
