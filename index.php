@@ -4,6 +4,10 @@ require __DIR__ . '/vendor/autoload.php';
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 if(file_exists(__DIR__.'/.env')) {
     //dotenv
     $dotenv = new Dotenv\Dotenv(__DIR__);
@@ -41,7 +45,6 @@ $dbh = new PDO($dsn, $username, $password);
 try {
     $instagram = new \InstagramScraper\Instagram();
     $medias = $instagram->getMediasByTag('sposiamorelli', 100);
-
     //if already cached, ignore, otherwise process!
     $cached_feeds_ids = $dbh->query('SELECT instagram_id from feeds', PDO::FETCH_ASSOC);
     $cached_ids = [];
@@ -56,20 +59,20 @@ try {
         $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
 
         if(!in_array($media->getId(), $cached_ids)) {
-            $log->info(date('h:i:sa').' - new feed found: '.$media->getId());
             //cache
-            $account = $media->getOwner();
             $data = [
                 'instagram_id' => $media->getId(),
                 'url' => $media->getLink(),
                 'created_at' => $media->getCreatedTime(),
                 'image' => $base64,
-                'username' => $account->getUsername(),
                 'caption' => $media->getCaption()
             ];
+//            $sql = "INSERT INTO feeds(instagram_id, url, created_at, image, caption) VALUES (:instagram_id, :url, :created_at, :image, :caption)";
+//            $result = $dbh->prepare($sql)
+//              ->execute($data);
 
-            $sql = "INSERT INTO feeds(instagram_id, url, created_at, image, username, caption) VALUES(:instagram_id, :url, :created_at, :image, :username, :caption)";
-            $dbh->prepare($sql)->execute($data);
+            $stmt = $dbh->prepare("INSERT INTO feeds(instagram_id, url, created_at, image, caption) VALUES (:instagram_id, :url, :created_at, :image, :caption)");
+            $stmt->execute($data);
         }
     }
     echo 'import complete!';
