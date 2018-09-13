@@ -23,7 +23,7 @@ $dbh = new PDO($dsn, $username, $password);
 
 try {
     $stmt = $dbh->query('SELECT * from feeds');
-    $feeds = $stmt->fetch();
+    $feeds = $stmt->fetchAll();
 
     header('Content-Type: application/json');
 
